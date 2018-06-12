@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple Chat</title>
+	<style type="text/css">
+		.container{
+			height: 400px;
+			width: 800px;
+			padding: 10px 20px;
+			margin: 20px auto;
+			background: #666;
+			border : 2px solid green;
+			border-radius: 20px;
+		}
+
+		p.chat{
+			margin: 5px ;
+			background: lightblue;
+			color: black;
+		}
+		.title{
+			text-align: center;
+		}
+
+		#chatbox{
+			border-radius: 20px;
+			height: 350px;
+			background: #ccc;
+			overflow: auto;
+		}
+		#messagebox{
+			width: 700px;
+			
+		}
+		input[type="text"]{
+			color: black;
+			width: 80%;
+		}
+		button{
+		/*	margin: .2%;*/
+			height: auto;
+			padding: 10px 5px;
+			width: 10%;
+
+		}
+		input{
+			display: inline-block;
+			margin : 5px auto;
+			padding: .8%;
+			/*width: 700px;*/
+			border-radius: 4px;
+		}
+		.displayBox{
+			margin: 5px;
+			border : 2px solid #03cd89;
+		}
+	</style>
+</head>
+<body>
+	<h1 class="title">Simple Chat</h1>
+	<div class="container">
+		<div class="displayBox">
+			<div id="chatbox">
+			
+			</div>
+		</div>
+		
+		<div id="messagebox">
+			<form id="messageform">
+				<input type="text" id="message" placeholder="type your message here" >
+				<button class="send" id="send" name="send">Send</button>
+			</form>
+			
+		</div>
+		
+	</div>
+
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+	
+	$(function(){
+	
+		var socket = io.connect();
+		var $outgoing = $('#message');
+		
+		var chatbox = $('#chatbox');
+		$('#messageform').on('submit', function(e){
+			e.preventDefault();
+			if ($outgoing.val()) {
+				socket.emit('outgoing',$outgoing.val());
+				$outgoing.val('');
+			}
+			
+		})
+
+		socket.on('new message',function(data){
+			// console.log(data);
+			chatbox.append('<p class="chat"> User 1: '+data.msg+'</p>');
+
+		})
+	});
+
+</script>
+
+</body>
+</html>
